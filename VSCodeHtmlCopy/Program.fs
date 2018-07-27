@@ -25,13 +25,21 @@ let main argv =
     let clipboard = ClipboardFactory.Create()
 
     let content = clipboard.GetHtml()
-    if content |> isNull then failwith "Unexpected clipboard contents"
+    
+    let expect condition =
+        if not condition then
+            printf "Unexpected clipboard contents"
+            exit 1
+
+    let isNotNull = isNull >> not
+
+    expect(content |> isNotNull)
 
     use reader = new StringReader(content)
     
     let versionLine = reader.ReadLine()
     
-    if versionLine <> "Version:0.9" then failwith "Unexpected clipboard contents"
+    expect(versionLine = "Version:0.9")
 
     let skipLines (numberOfLines: int) (reader: StringReader) =
         for _ in 1 .. numberOfLines do
