@@ -2,6 +2,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>vscode-html-copy</ToolCommandName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VSCodeHtmlCopy.Clipboard\VSCodeHtmlCopy.Clipboard.csproj" />

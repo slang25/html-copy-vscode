@@ -25,6 +25,8 @@ let main argv =
     let clipboard = ClipboardFactory.Create()
 
     let content = clipboard.GetHtml()
+    if content |> isNull then failwith "Unexpected clipboard contents"
+
     use reader = new StringReader(content)
     
     let versionLine = reader.ReadLine()
