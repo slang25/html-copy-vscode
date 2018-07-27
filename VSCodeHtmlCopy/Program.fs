@@ -71,7 +71,7 @@ let main argv =
 
             use sw = new StringWriter()
 
-            let rec getAllElements(predicate: 'T -> bool) (parent: INode) : seq<'T> =
+            let rec getAllElements predicate (parent: INode) =
                 seq {
                     for i in 0 .. (parent.ChildNodes.Length - 1) do
                         match parent.ChildNodes.[i] with
