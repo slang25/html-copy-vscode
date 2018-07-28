@@ -3,10 +3,10 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>vscode-html-copy</ToolCommandName>
+    <ToolCommandName>html-copy-vscode</ToolCommandName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VSCodeHtmlCopy.Clipboard\VSCodeHtmlCopy.Clipboard.csproj" />
+    <ProjectReference Include="..\HtmlCopyVSCode.Clipboard\HtmlCopyVSCode.Clipboard.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.fs" />

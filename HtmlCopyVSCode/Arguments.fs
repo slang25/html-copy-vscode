@@ -1,4 +1,4 @@
-namespace VSCodeHtmlCopy.Arguments
+namespace HtmlCopyVSCode.Arguments
 
 open Argu
 
