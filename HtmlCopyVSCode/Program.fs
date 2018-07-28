@@ -10,7 +10,6 @@ open System.IO
 open System.Linq
 open System.Text
 open HtmlCopyVSCode.Arguments
-open HtmlCopyVSCode.Clipboard
 
 [<EntryPoint>]
 let main argv =
@@ -19,8 +18,8 @@ let main argv =
 
     let results = (parser.ParseCommandLine argv).GetAllResults()
     let className = match results with
-                    | (Class className : Arguments) :: _ -> Some className
-                    | _ -> None
+                        | (Class className : Arguments) :: _ -> Some className
+                        | _ -> None
     
     let clipboard = Clipboard.create()
 
