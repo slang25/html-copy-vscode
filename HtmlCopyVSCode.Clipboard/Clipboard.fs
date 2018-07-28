@@ -13,7 +13,7 @@ type IClipboard =
 
 type WindowsClipboard() =
     [<DllImport("User32.dll", SetLastError = true)>]
-    static extern [<MarshalAs(UnmanagedType.Bool)>] bool IsClipboardFormatAvailable(uint32 format)
+    static extern bool IsClipboardFormatAvailable(uint32 format)
 
     [<DllImport("user32.dll", SetLastError = true)>]
     static extern uint32 RegisterClipboardFormatA(string lpszFormat)
@@ -25,13 +25,13 @@ type WindowsClipboard() =
     static extern nativeint SetClipboardData(uint32 uFormat, nativeint hMem)
 
     [<DllImport("User32.dll", SetLastError = true)>]
-    static extern [<MarshalAs(UnmanagedType.Bool)>] bool OpenClipboard(nativeint hWndNewOwner)
+    static extern bool OpenClipboard(nativeint hWndNewOwner)
 
     [<DllImport("user32.dll", SetLastError = true)>]
     static extern bool EmptyClipboard()
 
     [<DllImport("User32.dll", SetLastError = true)>]
-    static extern [<MarshalAs(UnmanagedType.Bool)>] bool CloseClipboard()
+    static extern bool CloseClipboard()
 
     [<DllImport("Kernel32.dll", SetLastError = true)>]
     static extern nativeint GlobalLock(nativeint hMem)
@@ -40,7 +40,7 @@ type WindowsClipboard() =
     static extern nativeint GlobalAlloc(uint32 uFlags, unativeint dwBytes)
 
     [<DllImport("Kernel32.dll", SetLastError = true)>]
-    static extern [<MarshalAs(UnmanagedType.Bool)>] bool GlobalUnlock(nativeint hMem)
+    static extern bool GlobalUnlock(nativeint hMem)
 
     [<DllImport("Kernel32.dll", SetLastError = true)>]
     static extern int GlobalSize(nativeint hMem)
