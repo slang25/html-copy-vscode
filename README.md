@@ -1,6 +1,8 @@
 # html-copy-vscode
 A global tool to convert snippets copied from VS Code into plain html to paste into your blog.
 
+[![NuGet](https://img.shields.io/nuget/v/HtmlCopyVSCode.svg)](https://www.nuget.org/packages/HtmlCopyVSCode/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) 
+
 ## Installation
 ```
 dotnet tool install -g HtmlCopyVSCode
