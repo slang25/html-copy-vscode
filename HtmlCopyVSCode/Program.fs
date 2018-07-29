@@ -22,44 +22,47 @@ let main argv =
                         | _ -> None
     
     let clipboard = Clipboard.create()
-
-    let content = clipboard.GetHtml()
     
-    let expect condition =
-        if not condition then
-            printf "Unexpected clipboard contents"
-            exit 1
+    let origionalFragment = 
+        let content = clipboard.GetHtml()
+        
+        let expect condition =
+            if not condition then
+                printf "Unexpected clipboard contents"
+                exit 1
 
-    let isNotNull = isNull >> not
+        let isNotNull = isNull >> not
 
-    expect(content |> isNotNull)
+        expect(content |> isNotNull)
 
-    use reader = new StringReader(content)
-    
-    let versionLine = reader.ReadLine()
+        use reader = new StringReader(content)
+        
+        let versionLine = reader.ReadLine()
 
-    expect(versionLine = "Version:0.9")
+        expect(versionLine = "Version:0.9")
 
-    let skipLines numberOfLines (reader: StringReader) =
-        for _ in 1 .. numberOfLines do
-            reader.ReadLine() |> ignore
+        let skipLines numberOfLines (reader: StringReader) =
+            for _ in 1 .. numberOfLines do
+                reader.ReadLine() |> ignore
 
-    reader |> skipLines 2
-    
-    let startFragmentLine = reader.ReadLine()
-    let startFragment = startFragmentLine.Substring("StartFragment:".Length) |> int
-    
-    let endFragmentLine = reader.ReadLine()
-    let endFragment = endFragmentLine.Substring("EndFragment:".Length) |> int
-    
-    let bytes = Encoding.UTF8.GetBytes(content)
-    let origionalFragment = Encoding.UTF8.GetString(bytes, startFragment, endFragment - startFragment)
+        reader |> skipLines 2
+        
+        let startFragmentLine = reader.ReadLine()
+        let startFragment = startFragmentLine.Substring("StartFragment:".Length) |> int
+        
+        let endFragmentLine = reader.ReadLine()
+        let endFragment = endFragmentLine.Substring("EndFragment:".Length) |> int
+        
+        let bytes = Encoding.UTF8.GetBytes(content)
+        Encoding.UTF8.GetString(bytes, startFragment, endFragment - startFragment)
+
     let fragment =
         match className with
         | Some className ->
-            let p = new HtmlParser()
-            let dom = p.Parse "<html><body></body></html>"
-            let nodes = p.ParseFragment(origionalFragment, dom.Body)
+            let nodes = 
+                let p = new HtmlParser()
+                let dom = p.Parse "<html><body></body></html>"
+                p.ParseFragment(origionalFragment, dom.Body)
 
             let rootDiv = nodes.First() :?> IElement
             rootDiv.ClassName <- className
@@ -81,8 +84,10 @@ let main argv =
                 }
 
             // Optimization: Remove color style on whitespace spans
-            nodes |> Seq.collect (getAllElements(fun e -> e.TagName = TagNames.Span && String.IsNullOrWhiteSpace(e.TextContent)))
-                  |> Seq.iter (fun node -> node.RemoveAttribute "style" |> ignore)
+            let isWhitespaceSpan (e: IElement) = e.TagName = TagNames.Span && String.IsNullOrWhiteSpace(e.TextContent)
+            let removeStyle (node: IElement) = node.RemoveAttribute "style" |> ignore
+            nodes |> Seq.collect (getAllElements isWhitespaceSpan)
+                  |> Seq.iter removeStyle
             
             nodes.ToHtml(sw, XhtmlMarkupFormatter.Instance)
             sw.ToString()
