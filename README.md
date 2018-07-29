@@ -3,7 +3,7 @@ A global tool to convert snippets copied from VS Code into plain html to paste i
 
 ## Installation
 ```
-dotnet tool install -g html-copy-vscode
+dotnet tool install --g HtmlCopyVSCode
 ```
 
 ## Usage
