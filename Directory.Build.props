@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Stuart Lang</Authors>
+    <Description>A global tool to convert snippets copied from VS Code into plain html to paste into your blog.</Description>
+    <PackageProjectUrl>https://github.com/slang25/html-copy-vscode</PackageProjectUrl>
+    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
+    <DebugType>embedded</DebugType>
+    <EmbedAllSources>true</EmbedAllSources>
+  </PropertyGroup>
+</Project>
