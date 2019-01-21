@@ -131,41 +131,41 @@ type internal MacOSClipboard() =
     static extern nativeint objc_getClass(string className)
 
     [<DllImport("/System/Library/Frameworks/AppKit.framework/AppKit", EntryPoint="objc_msgSend")>]
-    static extern nativeint objc_msgSend_nativeint_nativeint(nativeint receiver, nativeint selector)
+    static extern nativeint objc_msgSend1(nativeint receiver, nativeint selector)
 
     [<DllImport("/System/Library/Frameworks/AppKit.framework/AppKit", EntryPoint="objc_msgSend")>]
-    static extern nativeint objc_msgSend_nativeint_nativeint_string(nativeint receiver, nativeint selector, string arg1)
+    static extern nativeint objc_msgSend2(nativeint receiver, nativeint selector, string arg1)
 
     [<DllImport("/System/Library/Frameworks/AppKit.framework/AppKit", EntryPoint="objc_msgSend")>]
-    static extern nativeint objc_msgSend_nativeint_nativeint_nativeint(nativeint receiver, nativeint selector, nativeint arg1)
+    static extern nativeint objc_msgSend3(nativeint receiver, nativeint selector, nativeint arg1)
 
     [<DllImport("/System/Library/Frameworks/AppKit.framework/AppKit", EntryPoint="objc_msgSend")>]
-    static extern nativeint objc_msgSend_nativeint_nativeint_nativeint_nativeint(nativeint receiver, nativeint selector, nativeint arg1, nativeint arg2)
+    static extern nativeint objc_msgSend4(nativeint receiver, nativeint selector, nativeint arg1, nativeint arg2)
 
     [<DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")>]
     static extern nativeint sel_registerName(string selectorName)
     
     let nsString = objc_getClass "NSString"
     let nsPasteboard = objc_getClass "NSPasteboard"
-    let utfTextType = objc_msgSend_nativeint_nativeint_string(objc_msgSend_nativeint_nativeint(nsString, sel_registerName "alloc"), sel_registerName "initWithUTF8String:", "public.utf8-plain-text")
-    let htmlType = objc_msgSend_nativeint_nativeint_string(objc_msgSend_nativeint_nativeint(nsString, sel_registerName "alloc"), sel_registerName "initWithUTF8String:", "public.html")
+    let utfTextType = objc_msgSend2(objc_msgSend1(nsString, sel_registerName "alloc"), sel_registerName "initWithUTF8String:", "public.utf8-plain-text")
+    let htmlType = objc_msgSend2(objc_msgSend1(nsString, sel_registerName "alloc"), sel_registerName "initWithUTF8String:", "public.html")
 
-    let generalPasteboard = objc_msgSend_nativeint_nativeint(nsPasteboard, sel_registerName "generalPasteboard")
+    let generalPasteboard = objc_msgSend1(nsPasteboard, sel_registerName "generalPasteboard")
     
     interface IClipboard with
         member __.GetHtml() =
-            let ptr = objc_msgSend_nativeint_nativeint_nativeint(generalPasteboard, sel_registerName "stringForType:", htmlType)
-            let charArray = objc_msgSend_nativeint_nativeint(ptr, sel_registerName "UTF8String")
+            let ptr = objc_msgSend3(generalPasteboard, sel_registerName "stringForType:", htmlType)
+            let charArray = objc_msgSend1(ptr, sel_registerName "UTF8String")
             Marshal.PtrToStringAnsi(charArray)
 
         member __.SetText(text:string) =
             let mutable str = IntPtr.Zero;
             try
-                str <- objc_msgSend_nativeint_nativeint_string(objc_msgSend_nativeint_nativeint(nsString, sel_registerName "alloc"), sel_registerName "initWithUTF8String:", text)
-                objc_msgSend_nativeint_nativeint(generalPasteboard, sel_registerName "clearContents") |> ignore
-                objc_msgSend_nativeint_nativeint_nativeint_nativeint(generalPasteboard, sel_registerName "setString:forType:", str, utfTextType) |> ignore
+                str <- objc_msgSend2(objc_msgSend1(nsString, sel_registerName "alloc"), sel_registerName "initWithUTF8String:", text)
+                objc_msgSend1(generalPasteboard, sel_registerName "clearContents") |> ignore
+                objc_msgSend4(generalPasteboard, sel_registerName "setString:forType:", str, utfTextType) |> ignore
             finally
-                if str <> IntPtr.Zero then objc_msgSend_nativeint_nativeint(str, sel_registerName "release") |> ignore
+                if str <> IntPtr.Zero then objc_msgSend1(str, sel_registerName "release") |> ignore
 
 let create() =
         if RuntimeInformation.IsOSPlatform OSPlatform.Windows
