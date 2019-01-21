@@ -8,8 +8,11 @@ open AngleSharp.XHtml
 open System
 open System.IO
 open System.Linq
+open System.Runtime.InteropServices
 open System.Text
 open HtmlCopyVSCode.Arguments
+
+let [<Literal>] private prefix = "<meta charset='utf-8'>"
 
 [<EntryPoint>]
 let main argv =
@@ -27,34 +30,40 @@ let main argv =
         let content = clipboard.GetHtml()
         
         let expect condition =
-            if not condition then
-                printf "Unexpected clipboard contents"
-                exit 1
-
-        let isNotNull = isNull >> not
-
-        expect(content |> isNotNull)
-
-        use reader = new StringReader(content)
+                        if not condition then
+                            printf "Unexpected clipboard contents"
+                            exit 1
         
-        let versionLine = reader.ReadLine()
-
-        expect(versionLine = "Version:0.9")
-
-        let skipLines numberOfLines (reader: StringReader) =
-            for _ in 1 .. numberOfLines do
-                reader.ReadLine() |> ignore
-
-        reader |> skipLines 2
-        
-        let startFragmentLine = reader.ReadLine()
-        let startFragment = startFragmentLine.Substring("StartFragment:".Length) |> int
-        
-        let endFragmentLine = reader.ReadLine()
-        let endFragment = endFragmentLine.Substring("EndFragment:".Length) |> int
-        
-        let bytes = Encoding.UTF8.GetBytes(content)
-        Encoding.UTF8.GetString(bytes, startFragment, endFragment - startFragment)
+        if RuntimeInformation.IsOSPlatform OSPlatform.OSX then
+            printfn "%s" content
+            expect (content.StartsWith prefix)
+            content.[prefix.Length ..]
+        elif RuntimeInformation.IsOSPlatform OSPlatform.Windows then
+            let isNotNull = isNull >> not
+    
+            expect(content |> isNotNull)
+    
+            use reader = new StringReader(content)
+            
+            let versionLine = reader.ReadLine()
+    
+            expect(versionLine = "Version:0.9")
+    
+            let skipLines numberOfLines (reader: StringReader) =
+                for _ in 1 .. numberOfLines do
+                    reader.ReadLine() |> ignore
+    
+            reader |> skipLines 2
+            
+            let startFragmentLine = reader.ReadLine()
+            let startFragment = startFragmentLine.Substring("StartFragment:".Length) |> int
+            
+            let endFragmentLine = reader.ReadLine()
+            let endFragment = endFragmentLine.Substring("EndFragment:".Length) |> int
+            
+            let bytes = Encoding.UTF8.GetBytes(content)
+            Encoding.UTF8.GetString(bytes, startFragment, endFragment - startFragment)
+        else failwith "Unsupported platform"
 
     let fragment =
         match className with
