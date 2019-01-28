@@ -12,7 +12,9 @@ open System.Runtime.InteropServices
 open System.Text
 open HtmlCopyVSCode.Arguments
 
-let [<Literal>] private prefix = "<meta charset='utf-8'>"
+let [<Literal>] private vscodePrefix = """<meta charset='utf-8'>"""
+let [<Literal>] private riderPrefix = """<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>"""
+let [<Literal>] private riderSuffix = """</body></html>"""
 
 [<EntryPoint>]
 let main argv =
@@ -35,9 +37,15 @@ let main argv =
                             exit 1
         
         if RuntimeInformation.IsOSPlatform OSPlatform.OSX then
-            printfn "%s" content
-            expect (content.StartsWith prefix)
-            content.[prefix.Length ..]
+            printf "%s" content
+            if content.StartsWith vscodePrefix then
+                content.[vscodePrefix.Length ..]
+            elif content.StartsWith riderPrefix then
+                content.[riderPrefix.Length .. (content.Length-riderSuffix.Length - 1)]
+            else
+                printf "Unexpected clipboard contents"
+                exit 1
+            
         elif RuntimeInformation.IsOSPlatform OSPlatform.Windows then
             let isNotNull = isNull >> not
     
