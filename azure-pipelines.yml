@@ -7,7 +7,7 @@ variables:
   outDir: $(Build.ArtifactStagingDirectory)
 
 steps:
-- script: dotnet build $(sln) -c $(buildConfiguration) -o $(outDir) /nologo /p:GeneratePackageOnBuild=True
+- script: dotnet build $(sln) -c $(buildConfiguration) -o $(outDir) /nologo
   displayName: 'dotnet build $(buildConfiguration)'
 - task: CopyFiles@2
   inputs:
