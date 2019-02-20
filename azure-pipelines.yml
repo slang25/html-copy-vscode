@@ -3,7 +3,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  sln: ./HtmlCopyVSCode.sln
+  sln: ./HtmlCopyVSCode/HtmlCopyVSCode.fsproj
   outDir: $(Build.ArtifactStagingDirectory)
 
 steps:
