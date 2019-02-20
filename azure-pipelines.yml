@@ -9,5 +9,15 @@ variables:
 steps:
 - script: dotnet build $(sln) -c $(buildConfiguration) -o $(outDir) /nologo /p:GeneratePackageOnBuild=True
   displayName: 'dotnet build $(buildConfiguration)'
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: '*.nupkg' 
+    targetFolder: $(Build.ArtifactStagingDirectory)/nuget
+  displayName: 'Copy nuget package'
 - task: PublishBuildArtifacts@1
+  inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
+      artifactName: nuget
+  displayName: 'Publish nuget artifact'
   condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
