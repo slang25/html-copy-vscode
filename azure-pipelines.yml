@@ -11,7 +11,7 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 - task: CopyFiles@2
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
+    sourceFolder: '$(outDir)'
     contents: '*.nupkg' 
     targetFolder: $(Build.ArtifactStagingDirectory)/nuget
   displayName: 'Copy nuget package'
